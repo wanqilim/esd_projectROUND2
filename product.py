@@ -112,6 +112,7 @@ def create_product():
     price = request.form.get('price')
     pdesc =request.form.get('pdesc')
     bid = request.form.get('bid')
+    bid = request.form.get('stock')
     img = request.files['imgfile']
     fileext = img.filename.split('.')[-1]
     timestr = time.strftime("%Y%m%d-%H%M%S")

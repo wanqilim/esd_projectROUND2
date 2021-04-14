@@ -41,7 +41,6 @@
                         <div class="justify-content-center" v-for='(orderlist,i) in orders' style="background-color: #F0AEA0;border-radius: 20px;">
                             <h2 class="text-center">Group Order #{{ i }} </h2>
                             <input type="hidden" v-if='isbusiness && checkFulfillment[i]' id="group_oid" name="group_oid" v-bind:value="i" />
-                            <button id='submit' v-if='isbusiness && checkFulfillment[i]' v-on:click='fulfillOrder(i,orderlist)' class="btn btn-outline-danger">Fulfil Order</button>
                             <li class="list-group-item" v-for='(order,j) in orderlist'>
                                 <div class="row">
                                     <img class="col-3 img-fluid" :src="'../static/images/'+order.imgname" style="border-top-left-radius: 20px;border-top-right-radius: 20px">
@@ -55,6 +54,7 @@
                                     <div class="col-3">
                                         <p>{{order.datetime}}</p>
                                         <h4>Quantity: {{order.quantity}}</h4>
+                                        <button id='submit' v-if='isbusiness && checkFulfillment[i]' v-on:click='fulfillOrder(oid,order)' class="btn btn-outline-danger">Fulfil Order</button>
 
                                     </div>
                                 </div>
@@ -172,19 +172,17 @@
 
             },
             methods: {
-                fulfillOrder(group_oid,orderlist) {
+                fulfillOrder(oid,order) {
                     console.log(group_oid);
                     axios.put('http://127.0.0.1:5400/fulfill_order', {
-                            'group_oid': group_oid,
+                            'oid': oid,
                             'dStatus': 'Fulfilled'
                         })
                         .then((response) => {
-                            console.log(response);
-                            console.log(orderlist);
-                            for (order of orderlist){
+                        
                                 order.dStatus = 'Fulfilled'
                                 this.checkFulfillment[order.group_oid] = false
-                            }
+                            
                         })
                         .catch(error => {
                             // Errors when calling the service; such as network error, 

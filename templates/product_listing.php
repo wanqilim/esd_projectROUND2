@@ -62,13 +62,12 @@
 
       <div class="row justify-content-center">
         <label for="Price">Product Price: </label>
-
         <span class="input-group-text col-1" id="addon-wrapping" style="margin-left:10px">S$</span>
-        <input type="text" class="col-3" placeholder="0.00" aria-label="Product Price" name="price" aria-describedby="addon-wrapping">
+        <input type="text" class="col-3" placeholder="0.00" aria-label="Product Price" name="price" id='price' aria-describedby="addon-wrapping">
       </div>
       <div class="row justify-content-center">
         <label for="Stock">Inventory Stock: </label>
-        <input type="number" min='1' max='99' class="col-3" placeholder="0" aria-label="Product Stock" name="stock" aria-describedby="addon-wrapping">
+        <input type="number" min='1' max='99' class="col-3" placeholder="0" aria-label="Product Stock" name="stock" id='stock' aria-describedby="addon-wrapping">
       </div>
 
       <div class="row justify-content-center">
@@ -106,6 +105,10 @@
         var bid = sessionStorage.getItem('bid');
         product_url = "http://127.0.0.1:5001/add/product";
         console.log('before');
+        var pname = document.getElementById('Pname').value;
+        var img = document.getElementById('upload').value;
+        var price = document.getElementById('price').value;
+
         processaddingproducts(product_url);
 
         console.log('done');
