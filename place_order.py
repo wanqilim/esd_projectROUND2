@@ -35,7 +35,7 @@ def place_order():
             result = processPlaceOrder(order)
             print('\n------------------------')
             print('\nresult: ', result)
-            return jsonify(result), result["code"]
+            return jsonify(result)
 
         except Exception as e:
             # Unexpected error in code
@@ -68,6 +68,7 @@ def processPlaceOrder(order):
     # Check the order result; if a failure, send it to the error microservice.
     code = order_result["code"]
     
+    
     if code not in range(200, 300):
         # Inform the error microservice
         #print('\n\n-----Invoking error microservice as order fails-----')
@@ -84,7 +85,7 @@ def processPlaceOrder(order):
         # continue even if this invocation fails        
         print("\nOrder status ({:d}) published to the RabbitMQ Exchange:".format(
             code), order_result)
-       
+
         # 7. Return error
         return {
             "code": 500,
@@ -102,9 +103,7 @@ def processPlaceOrder(order):
         # record the activity log anyway
 
         print('\n\n-----Publishing the (order info) message with routing_key=order.info-----')
-        message='Order microservice success'  
-
-        # invoke_http(activity_log_URL, method="POST", json=order_result)            
+        message='Order microservice success'          
         amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="order.info", 
             body=message)
         #print('\n\n-----Invoking activity_log microservice-----')

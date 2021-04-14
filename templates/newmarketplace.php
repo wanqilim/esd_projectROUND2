@@ -235,6 +235,7 @@
         var PAYPAL_SECRET = 'EF1n5ItUXHKwB8qI7HRGzLtN9M5U9omdMKYTRm0BSvUkRgCr5LLyQvThBN4OJMl3a09yGFU8oXVf8Jpb';
         var PAYPAL_ORDER_API = 'https://api-m.paypal.com/v2/checkout/orders/';
 
+
         paypal.Buttons({
             createOrder: function(data, actions) {
                 var myCheckOutArr = myCart
@@ -267,10 +268,6 @@
                     var placeOrderUrl = "http://127.0.0.1:5200/place_order"
                     addNewOrder(placeOrderUrl);
 
-                    // if (pStatus) {
-                    //     alert("Order has been created")
-                    // }
-
                 }); //end of return
 
             } // end of onApprove
@@ -278,7 +275,7 @@
             // render in the paypal button container
         }).render('#paypal-button-container');
 
-        var pStatus = false
+        
 
         async function addNewOrder(url) {
             // Retrieve myCart, which consists of the following data, each arr is one new prod [[pid, pname, price, stock]]
@@ -288,7 +285,7 @@
 
             // Add each PID of the order upon checkout to send over to order MS
             for (item of myCheckOutArr) {
-                pidArr.push(parseInt(myCheckOutArr[0])) 
+                pidArr.push(parseInt(item[0])) 
             }
 
             var pidObj = {}
@@ -314,9 +311,14 @@
 
             xhr.onreadystatechange = function() {
                 if (xhr.readyState === 4 && xhr.status === 200) {
-                    console.log(this.responseText)
 
-                    pStatus = true
+                    var myResponse = JSON.parse(this.responseText)
+                    console.log(myResponse.data)
+                    console.log(myResponse.data.datetime)
+                    alert("Order has been successfully created on " + myResponse.data.datetime)
+                    
+                    window.location.href = "newmarketplace.php?msg=loggedin"
+
                 }
             }
 

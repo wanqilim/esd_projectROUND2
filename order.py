@@ -123,7 +123,7 @@ def find_by_cid(cid):
 @app.route("/order", methods=['POST'])
 def create_order():
     print(request.json)
-    pidlist = request.json.get('pid', None)
+    pidlist = request.json.get('newOrder', None)
     cid = request.json.get('cid', None)
     pResponse = request.json.get('pResponse', None)
     oStatus = 0

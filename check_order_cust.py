@@ -47,7 +47,7 @@ def processCheckOrderCust(cid):
         # Inform the error microservice
         #print('\n\n-----Order microservice fails-----')
         message=str(cid)+'Order microservice fails'
-        amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="product.error", 
+        amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="order.error", 
             body=message, properties=pika.BasicProperties(delivery_mode = 2)) 
         # make message persistent within the matching queues until it is received by some receiver 
         # (the matching queues have to exist and be durable and bound to the exchange)
