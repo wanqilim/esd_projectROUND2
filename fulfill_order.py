@@ -14,6 +14,7 @@ CORS(app)
 
 
 order_URL = environ.get('order_URL') or "http://localhost:5002/order" 
+product_URL = environ.get('product_URL') or "http://localhost:5001/product"
 
 
 @app.route("/fulfill_order", methods=['PUT'])
@@ -76,6 +77,7 @@ def processFulfillOrder(order):
             "message": "Order retrival fail."
         }
     else:
+        order_result = invoke_http(product_URL + '/product/fulfill/' + str(pid), method='PUT')
         return order_result
 
 # Execute this program if it is run as a main script (not by 'import')

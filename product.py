@@ -176,6 +176,29 @@ def update_product(pid):
     ), 404
 
 
+@app.route("/product/fulfill/<string:pid>", methods=['PUT'])
+def update_stock(pid):
+    try:
+        product = Product.query.filter_by(pid=pid).first()
+        product.stock=Product.stock-1
+        db.session.commit()
+        return jsonify(
+            {
+                "code": 200,
+                "data": product.json()
+            }
+        )
+    except Exception as e:
+        return jsonify(
+            {
+                "code": 404,
+                "data": {
+                    "pid": pid
+                },
+                "message": "Product not found."
+            }
+        ), 404
+
 @app.route("/product/<string:pid>", methods=['DELETE'])
 def delete_product(pid):
     product = Product.query.filter_by(pid=pid).first()
