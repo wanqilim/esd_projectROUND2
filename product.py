@@ -108,11 +108,12 @@ def find_by_bid(bid):
 
 @app.route("/add/product" ,methods=['POST'])
 def create_product():
+    print(request.form)
     pname = request.form.get('pname')
     price = request.form.get('price')
     pdesc =request.form.get('pdesc')
     bid = request.form.get('bid')
-    bid = request.form.get('stock')
+    stock = request.form.get('stock')
     img = request.files['imgfile']
     fileext = img.filename.split('.')[-1]
     timestr = time.strftime("%Y%m%d-%H%M%S")
@@ -120,7 +121,7 @@ def create_product():
     img.save(os.path.join(uploads_dir, secure_filename(imgname)))
     print(imgname)
 
-    product = Product(pname=pname,price=price,pdescription=pdesc,imgname=imgname, bid=bid)
+    product = Product(pname=pname,price=price,pdescription=pdesc,imgname=imgname, bid=bid,stock=stock)
     print(product)
     try:
         db.session.add(product)
