@@ -59,8 +59,8 @@ def place_order():
 def processPlaceOrder(order):
 
         # Invoke the order microservice
-    print('\n-----Invoking order microservice-----')
-    print(order)
+    #print('\n-----Invoking order microservice-----')
+    #print(order)
     order_result = invoke_http(order_URL, method='POST', json=order)
     print('order_result:', order_result)
     amqp_setup.check_setup()

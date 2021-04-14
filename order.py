@@ -122,31 +122,35 @@ def find_by_cid(cid):
 
 @app.route("/order", methods=['POST'])
 def create_order():
-    quantity = request.json.get('quantity', None)
-    pid = request.json.get('pid', None)
+    print(request.json)
+    pidlist = request.json.get('pid', None)
     cid = request.json.get('cid', None)
+    pResponse = request.json.get('pResponse', None)
     oStatus = 0
     dStatus = "Unfulfilled"
-    pResponse = request.json.get('pResponse', None)
+    
     orderlist = Order.query.all()
     if len(orderlist) == 0:
         group_oid = 1
     else:
-        lastrec= Order.query.order_by(desc(group_oid)).first()
+
+        lastrec= Order.query.order_by(Order.group_oid.desc()).first()
         group_oid = int(lastrec.json()['group_oid']) + 1
 
-    order = Order(quantity=quantity, pid=pid,  group_oid=group_oid, cid=cid, oStatus=oStatus, dStatus=dStatus, pResponse=pResponse)
+    for pid in pidlist:
 
-    try:
-        db.session.add(order)
-        db.session.commit()
-    except Exception as e:
-        return jsonify(
-            {
-                "code": 500,
-                "message": "An error occurred while creating the order. " + str(e)
-            }
-        ), 500
+        order = Order(pid=pid,  group_oid=group_oid, cid=cid, oStatus=oStatus, dStatus=dStatus, pResponse=pResponse)
+
+        try:
+            db.session.add(order)
+            db.session.commit()
+        except Exception as e:
+            return jsonify(
+                {
+                    "code": 500,
+                    "message": "An error occurred while creating the order. " + str(e)
+                }
+            ), 500
 
     # print(json.dumps(product.json(), default=str)) # convert a JSON object to a string and print
     # print()
