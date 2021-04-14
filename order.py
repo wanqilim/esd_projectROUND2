@@ -163,16 +163,16 @@ def create_order():
     ), 201
 
 
-@app.route("/order/<string:group_oid>", methods=['PUT'])
-def update_order(group_oid):
+@app.route("/order/<string:oid>", methods=['PUT'])
+def update_order(oid):
     try:
-        orders = Order.query.filter_by(group_oid=group_oid)
-        if not orders:
+        order = Order.query.filter_by(oid=oid).first()
+        if not order:
             return jsonify(
                 {
                     "code": 404,
                     "data": {
-                        "group_oid": group_oid
+                        "oid": oid
                     },
                     "message": "Order not found."
                 }
@@ -180,16 +180,13 @@ def update_order(group_oid):
 
         # update status
         data = request.get_json()
-        returnlist = []
-        for order in orders:
-            if data['dStatus']:
-                order.dStatus = data['dStatus']
-                db.session.commit()
-            returnlist.append(order.json())
+        if data['dStatus']:
+            order.dStatus = data['dStatus']
+            db.session.commit()
         return jsonify(
             {
                 "code": 200,
-                "data": returnlist
+                "data": order.json()
             }
         ), 200
     except Exception as e:
@@ -197,7 +194,7 @@ def update_order(group_oid):
             {
                 "code": 500,
                 "data": {
-                        "group_oid": group_oid
+                        "oid": oid
                 },
                 "message": "An error occurred while updating the order. " + str(e)
             }

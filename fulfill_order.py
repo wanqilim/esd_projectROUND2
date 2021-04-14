@@ -59,8 +59,9 @@ def processFulfillOrder(order):
     # 2. Get the order info
     # Invoke the order microservice
     print('\n-----Invoking order microservice-----')
-    group_oid=order['group_oid']
-    order_result = invoke_http(order_URL + '/' + str(group_oid), method='PUT', json=order)
+    oid=order['oid']
+    print(oid)
+    order_result = invoke_http(order_URL + '/' + str(oid), method='PUT', json=order)
     print('order_result:', order_result)
   
     code = order_result["code"]
@@ -77,7 +78,9 @@ def processFulfillOrder(order):
             "message": "Order retrival fail."
         }
     else:
-        order_result = invoke_http(product_URL + '/product/fulfill/' + str(pid), method='PUT')
+        # help me chek if this is correct
+        pid = order_result['data']['pid']
+        order_result = invoke_http(product_URL + '/fulfill/' + str(pid), method='PUT')
         return order_result
 
 # Execute this program if it is run as a main script (not by 'import')

@@ -179,6 +179,7 @@ def update_product(pid):
 @app.route("/product/fulfill/<string:pid>", methods=['PUT'])
 def update_stock(pid):
     try:
+        print('pid',pid)
         product = Product.query.filter_by(pid=pid).first()
         product.stock=Product.stock-1
         db.session.commit()

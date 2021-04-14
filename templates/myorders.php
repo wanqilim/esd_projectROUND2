@@ -54,7 +54,7 @@
                                     <div class="col-3">
                                         <p>{{order.datetime}}</p>
                                         <h4>Quantity: {{order.quantity}}</h4>
-                                        <button id='submit' v-if='isbusiness && checkFulfillment[i]' v-on:click='fulfillOrder(oid,order)' class="btn btn-outline-danger">Fulfil Order</button>
+                                        <button id='submit' v-if='isbusiness && checkFulfillment[order.oid]' v-on:click='fulfillOrder(order.oid,order)' class="btn btn-outline-danger">Fulfil Order</button>
 
                                     </div>
                                 </div>
@@ -146,10 +146,11 @@
                                         newdict[info.group_oid] = [info];
                                     }
                                     if (info.dStatus == 'Unfulfilled') {
-                                        this.checkFulfillment[info.group_oid] = true;
+                                        this.checkFulfillment[info.oid] = true;
                                     } else {
-                                        this.checkFulfillment[info.group_oid] = false;
+                                        this.checkFulfillment[info.oid] = false;
                                     }
+                                    console.log(this.checkFulfillment);
 
 
                                 }
@@ -173,15 +174,13 @@
             },
             methods: {
                 fulfillOrder(oid,order) {
-                    console.log(group_oid);
                     axios.put('http://127.0.0.1:5400/fulfill_order', {
                             'oid': oid,
                             'dStatus': 'Fulfilled'
                         })
                         .then((response) => {
-                        
                                 order.dStatus = 'Fulfilled'
-                                this.checkFulfillment[order.group_oid] = false
+                                this.checkFulfillment[order.oid] = false
                             
                         })
                         .catch(error => {
