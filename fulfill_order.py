@@ -66,6 +66,7 @@ def processFulfillOrder(order):
     
     code = order_result["code"]
 
+
     if code not in range(200, 300):
         # Inform the error microservice
         print('\n\n-----Order microservice fails-----')
