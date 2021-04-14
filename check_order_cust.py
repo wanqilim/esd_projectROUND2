@@ -106,7 +106,7 @@ def processCheckOrderCust(cid):
                 message=str(pid)+'Product microservice success'
                 amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="product.info", 
                 body=message)
-                final_result_list.append({'pname':product_result['data']['pname'],'oid': order['oid'], 'imgname':product_result['data']['imgname'], 'dStatus': order['dStatus'], 'datetime':order['datetime'], 'oStatus': order['oStatus'], 'quantity': order['quantity'], 'dStatus': order['dStatus'] })
+                final_result_list.append({'pname':product_result['data']['pname'],'oid': order['oid'], 'group_oid': order['group_oid'], 'imgname':product_result['data']['imgname'], 'dStatus': order['dStatus'], 'datetime':order['datetime'], 'oStatus': order['oStatus'], 'quantity': order['quantity'], 'dStatus': order['dStatus'] })
 
 
         #print(final_result_list)
