@@ -141,11 +141,7 @@
                                         sessionStorage.setItem(key, userinfo[key]);
 
                                     }
-                                    if(accountType == 'customer'){
-                                        window.location.href = 'newmarketplace.php?msg=loggedin';
-                                    }else{
-                                        window.location.href = 'myorders.php?msg=loggedin';
-                                    }
+                                    window.location.href = 'newmarketplace.php?msg=loggedin';
 
                                 }
                             } else {

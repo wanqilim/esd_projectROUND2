@@ -132,8 +132,8 @@
                     e.preventDefault();
                     var email = document.getElementById('email').value;
                     var confirmemail = document.getElementById('confirmemail').value;
-                    var password = sha512(document.getElementById('pwd').value);
-                    var confirmpassword = sha512(document.getElementById('cpwd').value);
+                    var password =  sha512(document.getElementById('pwd').value);
+                    var confirmpassword =  sha512(document.getElementById('cpwd').value);
                     accountType = document.querySelector("input[name=acctType]:checked").value;
 
                     if (accountType == 'customer') {
@@ -164,8 +164,7 @@
                         console.log('response ok');
                         data = await response.json();
                         console.log(data);
-                        if (response.status >= 200 && response.status < 300) {
-                            sessionStorage.clear();
+                        if (response.status >= 200 && response.status < 300) {                            sessionStorage.clear();
                             userinfo = data.data;
                             sessionStorage.setItem('loggedin', true);
                             sessionStorage.setItem('acctType', accountType);
@@ -174,13 +173,8 @@
                             }
                             console.log(window.sessionStorage);
 
-                            if (accountType == 'customer') {
-                                window.location.href = 'newmarketplace.php?msg=congratulations';
-                            } else {
-                                window.location.href = 'myorders.php?msg=congratulations';
-                            }
-
-                        } else {
+                            window.location.href = 'marketplace.php?msg=congratulations';
+                        }else{
 
                         }
                     } else {
