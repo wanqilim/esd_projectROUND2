@@ -66,6 +66,10 @@
         <span class="input-group-text col-1" id="addon-wrapping" style="margin-left:10px">S$</span>
         <input type="text" class="col-3" placeholder="0.00" aria-label="Product Price" name="price" aria-describedby="addon-wrapping">
       </div>
+      <div class="row justify-content-center">
+        <label for="Stock">Inventory Stock: </label>
+        <input type="number" min='1' max='99' class="col-3" placeholder="0" aria-label="Product Stock" name="stock" aria-describedby="addon-wrapping">
+      </div>
 
       <div class="row justify-content-center">
         <div class="form-group">

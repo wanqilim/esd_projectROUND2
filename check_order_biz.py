@@ -161,7 +161,7 @@ def processCheckOrderBiz(bid):
                     body=message)
                     final_result_list.append({'pname':product['pname'], 'imgname':product['imgname'], 'dStatus': order['dStatus'], 'oid': order['oid'],'group_oid': order['group_oid'], 'datetime':order['datetime'], 'oStatus': order['oStatus'], 'quantity': order['quantity'], 'dStatus': order['dStatus'], 'address': customer_result['data']['address']})
 
-sorted_finallist = sorted(final_result_list, key=lambda k: k['group_oid'])
+    sorted_finallist = sorted(final_result_list, key=lambda k: k['group_oid'])
 
     # 7. Return created order, shipping record
     return {
