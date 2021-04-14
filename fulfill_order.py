@@ -60,7 +60,9 @@ def processFulfillOrder(order):
     # Invoke the order microservice
     print('\n-----Invoking order microservice-----')
     oid=order['oid']
+    
     print(oid)
+    
     order_result = invoke_http(order_URL + '/' + str(oid), method='PUT', json=order)
     print('order_result:', order_result)
     
@@ -81,7 +83,9 @@ def processFulfillOrder(order):
     else:
         # help me chek if this is correct
         pid = order_result['data']['pid']
+        
         order_result = invoke_http(product_URL + '/fulfill/' + str(pid), method='PUT')
+        
         return order_result
 
 # Execute this program if it is run as a main script (not by 'import')
