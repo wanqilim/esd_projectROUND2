@@ -8,8 +8,6 @@ import requests
 from invokes import invoke_http
 
 import json
-import pika
-import json
 
 app = Flask(__name__)
 CORS(app)
@@ -62,18 +60,15 @@ def processFulfillOrder(order):
     # Invoke the order microservice
     print('\n-----Invoking order microservice-----')
     oid=order['oid']
+    print(oid)
     order_result = invoke_http(order_URL + '/' + str(oid), method='PUT', json=order)
     print('order_result:', order_result)
-    amqp_setup.check_setup()
     
     code = order_result["code"]
 
     if code not in range(200, 300):
         # Inform the error microservice
         print('\n\n-----Order microservice fails-----')
-        message='order microservice fail'
-        amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="order.error", 
-            body=message, properties=pika.BasicProperties(delivery_mode = 2)) 
 
 
         # 7. Return error
@@ -83,35 +78,10 @@ def processFulfillOrder(order):
             "message": "Order retrival fail."
         }
     else:
-        message='Order microservice success'          
-        amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="order.info", 
-            body=message)
-
+        # help me chek if this is correct
         pid = order_result['data']['pid']
-        product_result = invoke_http(product_URL + '/fulfill/' + str(pid), method='PUT')    
-
-        code=product_result["code"]
-        if code not in range(200, 300):
-            print('\n\n-----Product microservice fails-----')
-            message='product microservice fail'
-            amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="product.error", 
-                body=message, properties=pika.BasicProperties(delivery_mode = 2)) 
-
-
-            # 7. Return error
-            return {
-                "code": 500,
-                "data": {"product_result": product_result},
-                "message": "Stock update fail."
-            }
-        else:
-            message='product microservice success'          
-            amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="product.info", 
-                body=message)
-
-
-
-        return product_result
+        order_result = invoke_http(product_URL + '/fulfill/' + str(pid), method='PUT')
+        return order_result
 
 # Execute this program if it is run as a main script (not by 'import')
 if __name__ == "__main__":

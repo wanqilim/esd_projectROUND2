@@ -41,7 +41,6 @@
                         <div class="justify-content-center" v-for='(orderlist,i) in orders' style="background-color: #F0AEA0;border-radius: 20px;">
                             <h2 class="text-center">Group Order #{{ i }} </h2>
                             <input type="hidden" v-if='isbusiness && checkFulfillment[i]' id="group_oid" name="group_oid" v-bind:value="i" />
-                            <button id='submit' v-if='isbusiness && checkFulfillment[i]' v-on:click='fulfillOrder(i,orderlist)' class="btn btn-outline-danger">Fulfil Order</button>
                             <li class="list-group-item" v-for='(order,j) in orderlist'>
                                 <div class="row">
                                     <img class="col-3 img-fluid" :src="'../static/images/'+order.imgname" style="border-top-left-radius: 20px;border-top-right-radius: 20px">
@@ -55,11 +54,13 @@
                                     <div class="col-3">
                                         <p>{{order.datetime}}</p>
                                         <h4>Quantity: {{order.quantity}}</h4>
+                                        <button id='submit' v-if='isbusiness && checkFulfillment[order.oid]' v-on:click='fulfillOrder(order.oid,order)' class="btn btn-outline-danger">Fulfil Order</button>
 
                                     </div>
                                 </div>
                             </li>
                         </div>
+                        <br/>
                         <!-- end for -->
                     </ul>
                     <!-- else -->
@@ -145,10 +146,11 @@
                                         newdict[info.group_oid] = [info];
                                     }
                                     if (info.dStatus == 'Unfulfilled') {
-                                        this.checkFulfillment[info.group_oid] = true;
+                                        this.checkFulfillment[info.oid] = true;
                                     } else {
-                                        this.checkFulfillment[info.group_oid] = false;
+                                        this.checkFulfillment[info.oid] = false;
                                     }
+                                    console.log(this.checkFulfillment);
 
 
                                 }
@@ -171,19 +173,15 @@
 
             },
             methods: {
-                fulfillOrder(group_oid,orderlist) {
-                    console.log(group_oid);
+                fulfillOrder(oid,order) {
                     axios.put('http://127.0.0.1:5400/fulfill_order', {
-                            'group_oid': group_oid,
+                            'oid': oid,
                             'dStatus': 'Fulfilled'
                         })
                         .then((response) => {
-                            console.log(response);
-                            console.log(orderlist);
-                            for (order of orderlist){
                                 order.dStatus = 'Fulfilled'
-                                this.checkFulfillment[order.group_oid] = false
-                            }
+                                this.checkFulfillment[order.oid] = false
+                            
                         })
                         .catch(error => {
                             // Errors when calling the service; such as network error, 

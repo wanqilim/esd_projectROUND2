@@ -33,7 +33,7 @@
   <?php include "nav.html" ?>
 
 
-  <div class="container mx-auto text-center justify-content-center">
+  <div class="container mx-auto text-center justify-content-center" id='container'>
     <h1>Add a new product</h1>
     <?php if (isset($_GET['pid'])) { ?>
       <div class="alert alert-success" role="alert">
@@ -62,15 +62,18 @@
 
       <div class="row justify-content-center">
         <label for="Price">Product Price: </label>
-
         <span class="input-group-text col-1" id="addon-wrapping" style="margin-left:10px">S$</span>
-        <input type="text" class="col-3" placeholder="0.00" aria-label="Product Price" name="price" aria-describedby="addon-wrapping">
+        <input type="text" class="col-3" placeholder="0.00" aria-label="Product Price" name="price" id='price' aria-describedby="addon-wrapping">
+      </div>
+      <div class="row justify-content-center">
+        <label for="Stock">Inventory Stock: </label>
+        <input type="number" min='1' max='99' class="col-3" placeholder="0" aria-label="Product Stock" name="stock" id='stock' aria-describedby="addon-wrapping">
       </div>
 
       <div class="row justify-content-center">
         <div class="form-group">
           <label for="Description">Product Description:</label>
-          <textarea class="form-control" id="Description" name="pdesc" placeholder="Write a short description about your product..." rows="3"></textarea>
+          <textarea class="form-control" id="Description" name="pdesc"  placeholder="Write a short description about your product..." rows="3"></textarea>
         </div>
         <input type="hidden" name="bid" value="{{session['data']['bid']}}">
 
@@ -102,8 +105,17 @@
         var bid = sessionStorage.getItem('bid');
         product_url = "http://127.0.0.1:5001/add/product";
         console.log('before');
-        processaddingproducts(product_url);
+        var pname = document.getElementById('Pname').value;
+        var img = document.getElementById('upload').value;
+        var price = document.getElementById('price').value;
+        var stock = document.getElementById('stock').value;
+        var pdesc = document.getElementById('Description').value;
 
+        if (pname == '' || img == '' || parseFloat(price) == '' || parseFloat(price) < 0 || parseInt(stock) < 0 || parseInt(stock) > 100) {
+          alert('Invalid Input.')
+        } else {
+          processaddingproducts(product_url);
+        }
         console.log('done');
       });
 
@@ -124,10 +136,9 @@
 
           console.log('response ok');
           data = await response.json();
-          console.log(data);
-            productinfo = data.data;
-            window.location.href = 'product_listing.php?pid=' + productinfo['pid'];
-          
+          productinfo = data.data;
+          window.location.href = 'product_listing.php?pid=' + productinfo['pid'];
+
         } else {
           alert("There has been an error in listing the product, please refresh and try again");
         }
