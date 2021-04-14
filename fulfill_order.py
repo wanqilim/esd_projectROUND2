@@ -63,7 +63,7 @@ def processFulfillOrder(order):
     print(oid)
     order_result = invoke_http(order_URL + '/' + str(oid), method='PUT', json=order)
     print('order_result:', order_result)
-  
+    
     code = order_result["code"]
 
     if code not in range(200, 300):
