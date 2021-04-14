@@ -7,15 +7,15 @@ services:
  ###################################
   # AMQP: AMQP Setup
   ###################################
-  amqp_setup:
-    build:
-      context: ./
-      dockerfile: amqp_setup.Dockerfile
-    image: jianchengzhou/amqp_setup:esd
-    restart: always
-    environment:
-      dbURL: mysql+mysqlconnector://root@localhost:3306/order
-      PYTHONUNBUFFERED: 1
+#  amqp_setup:
+#    build:
+#      context: ./
+#      dockerfile: amqp_setup.Dockerfile
+#    image: jianchengzhou/amqp_setup:esd
+#    restart: always
+#    environment:
+#      dbURL: mysql+mysqlconnector://root@localhost:3306/order
+#      PYTHONUNBUFFERED: 1
  
   ###################################
   # Order: The Order microservice

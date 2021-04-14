@@ -42,6 +42,7 @@ def processCheckOrderBiz(bid):
     # if a failure, send it to the error microservice.
     code = product_result["code"]
     message = json.dumps(product_result)
+    amqp_setup.check_setup()
 
     #amqp_setup.check_setup()
 
@@ -73,7 +74,7 @@ def processCheckOrderBiz(bid):
         # record the activity log anyway
         #print('\n\n-----Invoking activity_log microservice-----')
         #print('\n\n-----Publishing the (product info) message with routing_key=product.info-----')        
-        message=str(pid)+'Product microservice success'
+        message=str(bid)+'Product microservice success'
         amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="product.info", body=message)
 
     # 3. Get the order info base on pid

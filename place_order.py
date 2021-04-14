@@ -16,15 +16,15 @@ CORS(app)
 
 
 order_URL = environ.get('order_URL') or "http://localhost:5002/order" 
-customer_URL = environ.get('customer_URL') or "http://localhost:5003/customer" 
 
 
-
+# print(request)
 @app.route("/place_order", methods=['POST'])
 def place_order():
     # Simple check of input format and data of the request are JSON
     # do the actual work
     # 1. Send get order info
+    # print(request)
     if request.is_json:
         try:
             order = request.get_json()
@@ -50,6 +50,7 @@ def place_order():
             }), 500
 
     # if reached here, not a JSON request.
+    
     return jsonify({
         "code": 400,
         "message": "Invalid JSON input: " + str(request.get_data())
@@ -62,6 +63,7 @@ def processPlaceOrder(order):
     print(order)
     order_result = invoke_http(order_URL, method='POST', json=order)
     print('order_result:', order_result)
+    amqp_setup.check_setup()
   
     # Check the order result; if a failure, send it to the error microservice.
     code = order_result["code"]
@@ -72,6 +74,7 @@ def processPlaceOrder(order):
         print('\n\n-----Publishing the (order error) message with order.error-----')
 
         # invoke_http(error_URL, method="POST", json=order_result)
+        message='order microservice fail'
         amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="order.error", 
             body=message, properties=pika.BasicProperties(delivery_mode = 2)) 
         # make message persistent within the matching queues until it is received by some receiver 
@@ -98,7 +101,8 @@ def processPlaceOrder(order):
         # 4. Record new order
         # record the activity log anyway
 
-        print('\n\n-----Publishing the (order info) message with routing_key=order.info-----')        
+        print('\n\n-----Publishing the (order info) message with routing_key=order.info-----')
+        message='Order microservice success'  
 
         # invoke_http(activity_log_URL, method="POST", json=order_result)            
         amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="order.info", 
