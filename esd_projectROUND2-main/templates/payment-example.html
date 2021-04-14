@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  {% include 'head.html' %}
+
+</head>
+
+<body>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+  <script
+    src="https://www.paypal.com/sdk/js?client-id=AVL3t_B9WIEb-CdLDHYK1sW8nXEtp7GM8Qk9m29QTvb-OYyb2dxdo_PapsHFT5KI08OyWiWDNtuL9tI0&currency=SGD"> // Required. Replace YOUR_CLIENT_ID with your sandbox client ID.
+    </script>
+  <div id="app">
+    <!-- TEMP STORAGE FOR USER-->
+    <input type='text' id='customer' value='{{ user }}' />
+    <input type='text' id='price' value='0.20' />
+    <!-- TEMP STORAGE FOR USER-->
+
+    {% include 'nav.html' %}
+
+    <div class="container">
+      <h1 style='text-align:center;'>Homie Purchase: ________</h1>
+      <!-- <h3>With membership, you can get the following benefits</h3> -->
+      <ul>
+        <!-- <li>20% Discount at our In-game Shop</li>
+        <li><b>Double points</b> from opening prize boxes</li> -->
+      </ul>
+      <br> <br>
+      <div style='text-align:center;' id="paypal-button-container"></div>
+      <div class="center" id='alert'></div>
+    </div>
+  </div>
+
+  <script>
+    var email = document.getElementById("customer").value;
+    var customer_URL = 'http://localhost:5003/customer/'
+    var app = new Vue({
+      el: "#app",
+      computed: {
+
+      },
+      data: {
+        "email": email
+      },
+      methods: {
+        getUserData: async function () {
+          const response =
+            await fetch(customer_URL + this.email, { method: 'GET' });
+
+          if (!response.ok) {
+            console.log("Error");
+          }
+          else {
+            const customer_data = await response.json();
+            // console.log(customer_data);
+            if (customer_data.code != 200) {
+              console.log("User not found!")
+            }
+
+
+          }
+        }
+      },
+      created: function () {
+        this.getUserData();
+      }
+    });
+    var PAYPAL_CLIENT = 'AVL3t_B9WIEb-CdLDHYK1sW8nXEtp7GM8Qk9m29QTvb-OYyb2dxdo_PapsHFT5KI08OyWiWDNtuL9tI0';
+    var PAYPAL_SECRET = 'EF1n5ItUXHKwB8qI7HRGzLtN9M5U9omdMKYTRm0BSvUkRgCr5LLyQvThBN4OJMl3a09yGFU8oXVf8Jpb';
+    var PAYPAL_ORDER_API = 'https://api-m.paypal.com/v2/checkout/orders/';
+
+    paypal.Buttons({
+      createOrder: function (data, actions) {
+        
+          return actions.order.create({
+            purchase_units: [{
+              description: 'Order for ABC',
+              amount: {
+                value: 2.00 // change to order price
+              }
+            }]//end of purchase units
+          }); //end of return
+      },
+      onApprove: function (data, actions) {
+        // This function captures the funds from the transaction.
+        return actions.order.capture().then(function (details) {
+          // This function shows a transaction success message to your buyer.
+          alert('Transaction completed by ' + details.payer.name.given_name);
+          console.log(details)
+          // Send update Data to orders
+          // subscription_url = 'http://localhost:5200'
+          // let useremail = document.getElementById("customer").value;
+          // let jsonSuccess = JSON.stringify({
+          //   code: 200,
+          //   email: useremail
+          // });
+        });//end of return
+
+      } // end of onApprove
+
+      // render in the paypal button container
+    }).render('#paypal-button-container');
+  </script>
+
+  {% include 'footer.html' %}
+
+</body>
+
+</html>

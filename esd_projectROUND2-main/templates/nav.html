@@ -1,0 +1,65 @@
+
+<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #9E3D40;">
+    <!-- add brand image pic or sth ? -->
+    <a class="navbar-brand" href="marketplace.php"> 
+        <img src="../static/Homie.png" width="50" height="50">
+        Homies
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+
+    <div class="navbar-collapse collapse w-100 order-3 dual-collapse2 justify-content-lg-end"
+        id="navbarSupportedContent">
+<!-- if session exis -->
+        
+        <ul class="navbar-nav ml-auto" id='login'>
+            <li class="nav-item">
+                <a class="nav-link" href="myorders.php">My Orders</a>
+            </li>
+<!-- if acct is business -->
+            <li class="nav-item" id='businesssec'>
+                <a class="nav-link" href="product_listing.php">List Product</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" onclick="logOut()">Log Out</a>
+            </li>
+        </ul>
+<!-- else if not login -->
+        <ul class="navbar-nav ml-auto" id='notlogin'>
+
+            <li class="nav-item">
+                <a class="nav-link" href="Loginpage.php">Login</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="signup.php">Signup</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<script>
+    function logOut(){
+        sessionStorage.clear();
+        window.location.href = "Loginpage.php?msg=logout";
+    }
+    $( document ).ready(function() {
+        if (!sessionStorage.getItem("loggedin")) {
+            document.getElementById('login').style.display = 'none';
+            document.getElementById('notlogin').style.display = 'block';
+        }else{
+            document.getElementById('login').style.display = 'block';
+            document.getElementById('notlogin').style.display = 'none';
+            if(sessionStorage.getItem("acctType") == "business"){
+                document.getElementById('businesssec').style.display = 'block';
+            }else{
+                document.getElementById('businesssec').style.display = 'none';
+            }
+        }
+
+    });
+    
+</script>
